@@ -1,6 +1,6 @@
 const config = {
     routingApi: location.origin + '/',
-    geocodingApi: '',
+    geocodingApi: 'https://graphhopper.com/api/1/',
     defaultTiles: 'OpenStreetMap',
     keys: {
         graphhopper: "",
@@ -13,9 +13,9 @@ const config = {
     request: {
         details: [
             'road_class',
-            'road_environment',
+            'surface',
             'max_speed',
-            'average_speed',
+            'toll',
         ],
         snapPreventions: ['ferry'],
     },
