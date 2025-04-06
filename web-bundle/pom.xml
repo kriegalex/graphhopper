@@ -9,6 +9,8 @@
     <properties>
         <graphhopper-maps.version>0.0.0-4718098d1db1798841a4d12f1727e8e8f7eab202
         </graphhopper-maps.version>
+        <skip.npm.download>false</skip.npm.download>
+        <maps.local.dir>${project.basedir}/../graphhopper-maps</maps.local.dir>
     </properties>
     <name>GraphHopper Dropwizard Bundle</name>
     <description>Use the GraphHopper routing engine as a web-service</description>
@@ -151,6 +153,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
+                            <skip>${skip.npm.download}</skip>
                             <!--suppress UnresolvedMavenProperty (IntelliJ shows an error otherwise...)-->
                             <arguments>
                                 pack --pack-destination=${basedir}/target
@@ -176,11 +179,31 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+                    <!-- Add a new execution for copying local maps when npm download is skipped -->
+                    <execution>
+                        <id>copy-local-maps-bundle</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <target if="${skip.npm.download}">
+                                <echo>Using local maps files from ${maps.local.dir}/dist</echo>
+                                <copy todir="${basedir}/target/classes/com/graphhopper/maps">
+                                    <fileset dir="${maps.local.dir}/dist">
+                                        <include name="**/*"/>
+                                        <exclude name="config.js"/>
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <!-- Modify the untar execution to run only when npm download is not skipped -->
                     <execution>
                         <id>unzip maps bundle</id>
                         <phase>process-resources</phase>
                         <configuration>
-                            <target>
+                            <target unless="${skip.npm.download}">
                                 <untar compression="gzip"
                                        src="${basedir}/target/graphhopper-graphhopper-maps-bundle-${graphhopper-maps.version}.tgz"
                                        dest="${basedir}/target/classes/com/graphhopper/maps">
