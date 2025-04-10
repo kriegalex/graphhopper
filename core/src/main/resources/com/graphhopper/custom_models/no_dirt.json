@@ -1,0 +1,7 @@
+// avoid enduro/trail tracks
+
+{
+  "priority": [
+    { "if": "road_class == TRACK", "multiply_by": "0.01" }
+  ]
+}
