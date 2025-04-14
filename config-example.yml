@@ -1,5 +1,7 @@
 graphhopper:
 
+  # Set to false to disable serving the GraphHopper Maps UI (web-bundle)
+  web_bundle.enabled: true
   # OpenStreetMap input file PBF or XML, can be changed via command line -Ddw.graphhopper.datareader.file=some.pbf
   datareader.file: ""
   # Local folder used by graphhopper to store its data
